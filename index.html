@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
-  <title>PagoQ · Quincenas 15 y 30</title>
+  <title>PagoQ · Control quincenal independiente</title>
   <style>
     * {
       margin: 0;
@@ -139,7 +139,7 @@
       background: var(--card);
       border-radius: var(--radius);
       padding: 0.75rem 1rem;
-      flex: 1 1 calc(25% - 0.75rem);
+      flex: 1 1 calc(50% - 0.75rem);
       min-width: 160px;
       border: 1px solid var(--border);
       box-shadow: var(--shadow);
@@ -157,7 +157,7 @@
       line-height: 1.2;
     }
     .stat-detail {
-      font-size: 0.7rem;
+      font-size: 0.75rem;
       color: var(--text-light);
       margin-top: 0.25rem;
     }
@@ -168,63 +168,58 @@
       border-left: 4px solid var(--bgeneral-text);
     }
 
-    /* Tablas gemelas */
-    .tables-wrapper {
+    /* Two-column layout */
+    .columns {
       display: flex;
-      gap: 1rem;
       flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1rem;
     }
-    .table-container {
+    .column {
       flex: 1;
       min-width: 280px;
       background: var(--card);
       border-radius: var(--radius);
       border: 1px solid var(--border);
-      overflow-x: auto;
+      overflow: hidden;
     }
-    .table-container h3 {
-      padding: 0.9rem 1rem 0.5rem;
-      font-size: 1rem;
-      font-weight: 600;
-      border-bottom: 1px solid var(--border);
+    .column-header {
       background: var(--bg);
-      margin: 0;
+      padding: 0.9rem 1rem;
+      border-bottom: 1px solid var(--border);
+      font-weight: 700;
+      font-size: 1.1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    th {
-      text-align: left;
-      padding: 0.7rem 0.75rem 0.5rem;
+    .column-header small {
       font-size: 0.7rem;
-      font-weight: 600;
+      font-weight: normal;
       color: var(--text-light);
-      border-bottom: 1px solid var(--border);
     }
-    td {
-      padding: 0.7rem 0.75rem;
+    .account-list {
+      padding: 0.5rem 0;
+    }
+    .account-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      padding: 0.6rem 1rem;
       border-bottom: 1px solid var(--border);
-      vertical-align: middle;
+      flex-wrap: wrap;
     }
     .account-name {
       font-weight: 500;
+      flex: 2;
+      min-width: 100px;
       cursor: pointer;
-      display: inline-block;
-      padding: 0.2rem 0;
       border-bottom: 1px dashed transparent;
     }
     .account-name:hover {
       border-color: var(--accent);
       color: var(--accent);
-    }
-    .edit-name-input {
-      background: var(--bg);
-      border: 1px solid var(--accent);
-      border-radius: 8px;
-      padding: 0.3rem 0.5rem;
-      font-size: 0.85rem;
-      width: 110px;
     }
     .amount-input {
       background: var(--bg);
@@ -232,34 +227,14 @@
       border-radius: 12px;
       padding: 0.5rem 0.5rem;
       font-size: 0.9rem;
-      width: 100%;
-      min-width: 85px;
+      width: 100px;
       text-align: right;
       font-weight: 500;
-      transition: 0.1s;
     }
     .amount-input:focus {
       outline: none;
       border-color: var(--accent);
       box-shadow: 0 0 0 2px rgba(59,130,246,0.2);
-    }
-    /* Colores según cuenta de pago */
-    .cell-kali {
-      background-color: var(--kali-bg);
-      color: var(--kali-text);
-      border-radius: 12px;
-      font-weight: 600;
-    }
-    .cell-bgeneral {
-      background-color: var(--bgeneral-bg);
-      color: var(--bgeneral-text);
-      border-radius: 12px;
-      font-weight: 600;
-    }
-    .cell-efectivo {
-      background-color: var(--efectivo-bg);
-      color: var(--text-light);
-      border-radius: 12px;
     }
     .payment-select {
       background: var(--bg);
@@ -273,28 +248,33 @@
     .delete-btn {
       background: transparent;
       border: none;
-      font-size: 1.2rem;
-      padding: 0.3rem;
+      font-size: 1.1rem;
+      padding: 0.2rem;
       border-radius: 40px;
-      width: 34px;
-      height: 34px;
+      width: 32px;
+      height: 32px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       color: var(--text-light);
+      cursor: pointer;
     }
     .delete-btn:active {
       background: #fee2e2;
       color: #ef4444;
     }
-    .add-btn-inline {
-      width: 100%;
-      justify-content: center;
+    .add-account-btn {
+      margin: 0.8rem auto;
+      display: block;
+      width: calc(100% - 2rem);
       background: var(--bg);
       border: 1px dashed var(--border);
       border-radius: 2rem;
       padding: 0.6rem;
-      margin-top: 0.5rem;
+      text-align: center;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
     }
 
     /* Modal */
@@ -338,6 +318,7 @@
       display: flex;
       gap: 1rem;
       margin: 0.5rem 0 1rem;
+      flex-wrap: wrap;
     }
     .radio-group label {
       display: flex;
@@ -374,19 +355,30 @@
       opacity: 1;
     }
 
+    /* Colores para el input de monto según payment */
+    .amount-input.kali {
+      background-color: var(--kali-bg);
+      color: var(--kali-text);
+    }
+    .amount-input.bgeneral {
+      background-color: var(--bgeneral-bg);
+      color: var(--bgeneral-text);
+    }
+    .amount-input.efectivo {
+      background-color: var(--efectivo-bg);
+      color: var(--text-light);
+    }
+
     @media (max-width: 700px) {
-      .tables-wrapper {
+      .columns {
         flex-direction: column;
       }
-      .stat-card {
-        min-width: calc(50% - 0.75rem);
+      .account-item {
+        flex-wrap: wrap;
+        gap: 0.4rem;
       }
-      .header-inner {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      .controls {
-        justify-content: space-between;
+      .account-name {
+        flex-basis: 100%;
       }
     }
   </style>
@@ -416,33 +408,24 @@
     <div class="stat-card bgeneral"><div class="stat-label">🏧 PAGADO CON BGENERAL</div><div class="stat-number" id="totalBGen">$0.00</div><div class="stat-detail" id="detailBGen"></div></div>
   </div>
 
-  <div class="tables-wrapper">
-    <!-- Tabla Quincena 15 -->
-    <div class="table-container">
-      <h3>📅 Quincena 15 (día 15)</h3>
-      <table id="tableQ15">
-        <thead>
-          <tr><th>Cuenta</th><th>Monto</th><th>Cuenta pago</th><th style="width:40px"></th></tr>
-        </thead>
-        <tbody id="tbodyQ15"></tbody>
-      </table>
-      <div style="padding: 0.5rem 0.75rem 0.75rem;">
-        <button class="add-btn-inline" onclick="openModalWithQuincena('15')">+ Agregar cuenta a Q15</button>
+  <div class="columns">
+    <!-- Columna Q15 -->
+    <div class="column">
+      <div class="column-header">
+        <span>📅 Quincena 15</span>
+        <small>cuentas activas</small>
       </div>
+      <div id="q15List" class="account-list"></div>
+      <div class="add-account-btn" data-quincena="15">+ Agregar cuenta a Q15</div>
     </div>
-
-    <!-- Tabla Quincena 30 -->
-    <div class="table-container">
-      <h3>📅 Quincena 30 (fin de mes)</h3>
-      <table id="tableQ30">
-        <thead>
-          <tr><th>Cuenta</th><th>Monto</th><th>Cuenta pago</th><th style="width:40px"></th></tr>
-        </thead>
-        <tbody id="tbodyQ30"></tbody>
-      </table>
-      <div style="padding: 0.5rem 0.75rem 0.75rem;">
-        <button class="add-btn-inline" onclick="openModalWithQuincena('30')">+ Agregar cuenta a Q30</button>
+    <!-- Columna Q30 -->
+    <div class="column">
+      <div class="column-header">
+        <span>📅 Quincena 30</span>
+        <small>cuentas activas</small>
       </div>
+      <div id="q30List" class="account-list"></div>
+      <div class="add-account-btn" data-quincena="30">+ Agregar cuenta a Q30</div>
     </div>
   </div>
 </main>
@@ -457,7 +440,7 @@
     <div class="radio-group">
       <label><input type="radio" name="quincena" value="15"> Solo Q15</label>
       <label><input type="radio" name="quincena" value="30"> Solo Q30</label>
-      <label><input type="radio" name="quincena" value="ambas" checked> Ambas quincenas</label>
+      <label><input type="radio" name="quincena" value="ambas" checked> Ambas (independiente)</label>
     </div>
     <div class="modal-buttons">
       <button id="modalCancel">Cancelar</button>
@@ -467,32 +450,35 @@
 </div>
 
 <script>
-  // MODELO: cada cuenta tiene un campo "quincena": "15", "30", o "ambas"
-  let accounts = [];           // { id, name, quincena }
-  let monthData = {};          // "YYYY-MM": { accountId: { amount: number, payment: string } }
+  // ---------- MODELO ----------
+  let accounts = [];           // { id, name, quincena: "15" | "30" | "ambas" }
+  let monthData = {};          // "YYYY-MM": { accountId: { q15Amount, q15Payment, q30Amount, q30Payment } }
+
   let currentMonth = new Date().getMonth() + 1;
   let currentYear = new Date().getFullYear();
-
   const monthNames = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
 
   function monthKey() { return `${currentYear}-${String(currentMonth).padStart(2,'0')}`; }
 
-  function getEntry(accId) {
+  function getEntry(accountId) {
     const mk = monthKey();
     if (!monthData[mk]) monthData[mk] = {};
-    if (!monthData[mk][accId]) {
-      monthData[mk][accId] = { amount: 0, payment: "KALI" };
+    if (!monthData[mk][accountId]) {
+      monthData[mk][accountId] = {
+        q15Amount: 0, q15Payment: "KALI",
+        q30Amount: 0, q30Payment: "BGeneral"
+      };
     }
-    return monthData[mk][accId];
+    return monthData[mk][accountId];
   }
 
   function saveToLocal() {
-    localStorage.setItem('pq_dual_accounts_v2', JSON.stringify(accounts));
-    localStorage.setItem('pq_dual_monthData_v2', JSON.stringify(monthData));
+    localStorage.setItem('pq_indep_accounts', JSON.stringify(accounts));
+    localStorage.setItem('pq_indep_monthData', JSON.stringify(monthData));
   }
 
   function loadFromLocal() {
-    const storedAccounts = localStorage.getItem('pq_dual_accounts_v2');
+    const storedAccounts = localStorage.getItem('pq_indep_accounts');
     if (storedAccounts) {
       accounts = JSON.parse(storedAccounts);
     } else {
@@ -501,144 +487,180 @@
         { id: 'acc2', name: 'Agua', quincena: 'ambas' },
         { id: 'acc3', name: 'Luz', quincena: '30' },
         { id: 'acc4', name: 'Seguro', quincena: '15' },
-        { id: 'acc5', name: 'Gym', quincena: '15' },
-        { id: 'acc6', name: 'Streaming', quincena: '30' },
       ];
     }
-    const storedData = localStorage.getItem('pq_dual_monthData_v2');
+    const storedData = localStorage.getItem('pq_indep_monthData');
     if (storedData) monthData = JSON.parse(storedData);
     else monthData = {};
   }
 
-  function getCellClass(payment) {
-    if (payment === "KALI") return "cell-kali";
-    if (payment === "BGeneral") return "cell-bgeneral";
-    return "cell-efectivo";
+  // Helper para obtener clase de color según payment
+  function getAmountClass(payment) {
+    if (payment === "KALI") return "kali";
+    if (payment === "BGeneral") return "bgeneral";
+    return "efectivo";
   }
 
-  // Renderizar ambas tablas
-  function renderTables() {
-    const tbody15 = document.getElementById('tbodyQ15');
-    const tbody30 = document.getElementById('tbodyQ30');
-    tbody15.innerHTML = '';
-    tbody30.innerHTML = '';
+  // Renderizar ambas columnas
+  function renderColumns() {
+    const q15Container = document.getElementById('q15List');
+    const q30Container = document.getElementById('q30List');
+    q15Container.innerHTML = '';
+    q30Container.innerHTML = '';
+
     const mk = monthKey();
+    // Filtrar cuentas que aplican a cada quincena
+    const q15Accounts = accounts.filter(a => a.quincena === '15' || a.quincena === 'ambas');
+    const q30Accounts = accounts.filter(a => a.quincena === '30' || a.quincena === 'ambas');
 
-    accounts.forEach(acc => {
+    // Render Q15
+    q15Accounts.forEach(acc => {
       const entry = getEntry(acc.id);
-      const amount = entry.amount;
-      const payment = entry.payment;
-
-      const createRow = (targetTbody) => {
-        const row = document.createElement('tr');
-        // Nombre
-        const nameCell = document.createElement('td');
-        const nameSpan = document.createElement('span');
-        nameSpan.className = 'account-name';
-        nameSpan.textContent = acc.name;
-        nameSpan.ondblclick = () => startEditName(acc.id, nameSpan, targetTbody === tbody15 ? '15' : '30');
-        nameCell.appendChild(nameSpan);
-        row.appendChild(nameCell);
-        // Monto
-        const amountCell = document.createElement('td');
-        const amountInput = document.createElement('input');
-        amountInput.type = 'number';
-        amountInput.step = '0.01';
-        amountInput.placeholder = '0.00';
-        amountInput.value = amount.toFixed(2);
-        amountInput.classList.add('amount-input');
-        amountInput.classList.add(getCellClass(payment));
-        amountInput.addEventListener('change', (e) => onAmountChange(acc.id, parseFloat(e.target.value) || 0));
-        amountInput.addEventListener('keydown', handleEnterNavigation);
-        amountCell.appendChild(amountInput);
-        row.appendChild(amountCell);
-        // Selector pago
-        const payCell = document.createElement('td');
-        const paySelect = document.createElement('select');
-        paySelect.classList.add('payment-select');
-        paySelect.innerHTML = `
-          <option value="KALI" ${payment === "KALI" ? "selected" : ""}>🏦 KALI</option>
-          <option value="BGeneral" ${payment === "BGeneral" ? "selected" : ""}>🏧 BGeneral</option>
-          <option value="Efectivo" ${payment === "Efectivo" ? "selected" : ""}>💵 Efectivo</option>
-        `;
-        paySelect.addEventListener('change', (e) => onPaymentChange(acc.id, e.target.value));
-        paySelect.addEventListener('keydown', handleEnterNavigation);
-        payCell.appendChild(paySelect);
-        row.appendChild(payCell);
-        // Eliminar
-        const delCell = document.createElement('td');
-        const delBtn = document.createElement('button');
-        delBtn.textContent = '✕';
-        delBtn.classList.add('delete-btn');
-        delBtn.addEventListener('click', () => deleteAccount(acc.id));
-        delCell.appendChild(delBtn);
-        row.appendChild(delCell);
-        targetTbody.appendChild(row);
-      };
-
-      if (acc.quincena === '15' || acc.quincena === 'ambas') createRow(tbody15);
-      if (acc.quincena === '30' || acc.quincena === 'ambas') createRow(tbody30);
+      const amount = entry.q15Amount;
+      const payment = entry.q15Payment;
+      const item = createAccountItem(acc.id, acc.name, amount, payment, 'q15');
+      q15Container.appendChild(item);
     });
+    if (q15Accounts.length === 0) {
+      const emptyMsg = document.createElement('div');
+      emptyMsg.className = 'account-item';
+      emptyMsg.style.justifyContent = 'center';
+      emptyMsg.style.color = 'var(--text-light)';
+      emptyMsg.textContent = 'Sin cuentas en Q15. Agrega una.';
+      q15Container.appendChild(emptyMsg);
+    }
+
+    // Render Q30
+    q30Accounts.forEach(acc => {
+      const entry = getEntry(acc.id);
+      const amount = entry.q30Amount;
+      const payment = entry.q30Payment;
+      const item = createAccountItem(acc.id, acc.name, amount, payment, 'q30');
+      q30Container.appendChild(item);
+    });
+    if (q30Accounts.length === 0) {
+      const emptyMsg = document.createElement('div');
+      emptyMsg.className = 'account-item';
+      emptyMsg.style.justifyContent = 'center';
+      emptyMsg.style.color = 'var(--text-light)';
+      emptyMsg.textContent = 'Sin cuentas en Q30. Agrega una.';
+      q30Container.appendChild(emptyMsg);
+    }
 
     updateTotals();
   }
 
-  function onAmountChange(accountId, value) {
+  function createAccountItem(accountId, name, amount, payment, quincenaType) {
+    const div = document.createElement('div');
+    div.className = 'account-item';
+    div.dataset.id = accountId;
+    div.dataset.quincena = quincenaType;
+
+    // Nombre editable
+    const nameSpan = document.createElement('span');
+    nameSpan.className = 'account-name';
+    nameSpan.textContent = name;
+    nameSpan.addEventListener('dblclick', () => startEditName(accountId, nameSpan));
+
+    // Input monto
+    const amountInput = document.createElement('input');
+    amountInput.type = 'number';
+    amountInput.step = '0.01';
+    amountInput.placeholder = '0.00';
+    amountInput.value = amount.toFixed(2);
+    amountInput.classList.add('amount-input', getAmountClass(payment));
+    amountInput.addEventListener('change', (e) => onAmountChange(accountId, quincenaType, parseFloat(e.target.value) || 0));
+    amountInput.addEventListener('keydown', handleEnterNavigation);
+
+    // Selector de pago
+    const paySelect = document.createElement('select');
+    paySelect.classList.add('payment-select');
+    paySelect.innerHTML = `
+      <option value="KALI" ${payment === "KALI" ? "selected" : ""}>🏦 KALI</option>
+      <option value="BGeneral" ${payment === "BGeneral" ? "selected" : ""}>🏧 BGeneral</option>
+      <option value="Efectivo" ${payment === "Efectivo" ? "selected" : ""}>💵 Efectivo</option>
+    `;
+    paySelect.addEventListener('change', (e) => onPaymentChange(accountId, quincenaType, e.target.value));
+    paySelect.addEventListener('keydown', handleEnterNavigation);
+
+    // Botón eliminar cuenta
+    const delBtn = document.createElement('button');
+    delBtn.textContent = '✕';
+    delBtn.classList.add('delete-btn');
+    delBtn.addEventListener('click', () => deleteAccount(accountId));
+
+    div.appendChild(nameSpan);
+    div.appendChild(amountInput);
+    div.appendChild(paySelect);
+    div.appendChild(delBtn);
+    return div;
+  }
+
+  function onAmountChange(accountId, quincenaType, value) {
     const mk = monthKey();
     if (!monthData[mk]) monthData[mk] = {};
-    if (!monthData[mk][accountId]) monthData[mk][accountId] = { amount: 0, payment: "KALI" };
-    monthData[mk][accountId].amount = value;
+    if (!monthData[mk][accountId]) monthData[mk][accountId] = { q15Amount:0, q15Payment:"KALI", q30Amount:0, q30Payment:"BGeneral" };
+    if (quincenaType === 'q15') monthData[mk][accountId].q15Amount = value;
+    else monthData[mk][accountId].q30Amount = value;
     saveToLocal();
-    renderTables();
+    renderColumns();
     showToast('✓ Monto guardado');
   }
 
-  function onPaymentChange(accountId, newPayment) {
+  function onPaymentChange(accountId, quincenaType, newPayment) {
     const mk = monthKey();
     if (!monthData[mk]) monthData[mk] = {};
-    if (!monthData[mk][accountId]) monthData[mk][accountId] = { amount: 0, payment: "KALI" };
-    monthData[mk][accountId].payment = newPayment;
+    if (!monthData[mk][accountId]) monthData[mk][accountId] = { q15Amount:0, q15Payment:"KALI", q30Amount:0, q30Payment:"BGeneral" };
+    if (quincenaType === 'q15') monthData[mk][accountId].q15Payment = newPayment;
+    else monthData[mk][accountId].q30Payment = newPayment;
     saveToLocal();
-    renderTables();
+    renderColumns();
     showToast('✓ Cuenta de pago actualizada');
   }
 
-  function startEditName(accountId, spanElem, quincenaContext) {
+  function startEditName(accountId, spanElement) {
     const acc = accounts.find(a => a.id === accountId);
     const input = document.createElement('input');
     input.value = acc.name;
     input.classList.add('edit-name-input');
-    const save = () => {
+    input.style.background = 'var(--bg)';
+    input.style.border = '1px solid var(--accent)';
+    input.style.borderRadius = '8px';
+    input.style.padding = '0.2rem 0.4rem';
+    const saveEdit = () => {
       const newName = input.value.trim();
       if (newName) acc.name = newName;
       saveToLocal();
-      renderTables();
+      renderColumns();
     };
-    input.addEventListener('blur', save);
-    input.addEventListener('keydown', (e) => { if (e.key === 'Enter') save(); else if (e.key === 'Escape') renderTables(); });
-    spanElem.replaceWith(input);
+    input.addEventListener('blur', saveEdit);
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') saveEdit();
+      else if (e.key === 'Escape') renderColumns();
+    });
+    spanElement.replaceWith(input);
     input.focus();
   }
 
-  function deleteAccount(id) {
-    const acc = accounts.find(a => a.id === id);
-    if (!confirm(`¿Eliminar "${acc.name}"?`)) return;
-    accounts = accounts.filter(a => a.id !== id);
+  function deleteAccount(accountId) {
+    const acc = accounts.find(a => a.id === accountId);
+    if (!confirm(`¿Eliminar "${acc.name}" de todas las quincenas?`)) return;
+    accounts = accounts.filter(a => a.id !== accountId);
     const mk = monthKey();
-    if (monthData[mk] && monthData[mk][id]) delete monthData[mk][id];
+    if (monthData[mk] && monthData[mk][accountId]) delete monthData[mk][accountId];
     saveToLocal();
-    renderTables();
+    renderColumns();
     showToast('Cuenta eliminada');
   }
 
   function handleEnterNavigation(e) {
     if (e.key !== 'Enter') return;
     e.preventDefault();
-    // Buscar todos los campos enfocables en ambas tablas
-    const allInputs = Array.from(document.querySelectorAll('#tbodyQ15 .amount-input, #tbodyQ15 .payment-select, #tbodyQ30 .amount-input, #tbodyQ30 .payment-select'));
-    const idx = allInputs.indexOf(e.target);
-    if (idx !== -1 && idx + 1 < allInputs.length) {
-      allInputs[idx + 1].focus();
+    // Recolectar todos los inputs y selects dentro de las columnas
+    const focusable = Array.from(document.querySelectorAll('.account-item .amount-input, .account-item .payment-select'));
+    const idx = focusable.indexOf(e.target);
+    if (idx !== -1 && idx + 1 < focusable.length) {
+      focusable[idx + 1].focus();
     } else {
       // Si es el último, abrir modal para agregar cuenta
       openModal();
@@ -654,17 +676,20 @@
     accounts.forEach(acc => {
       const entry = monthData[mk]?.[acc.id];
       if (!entry) return;
-      const amount = entry.amount || 0;
-      const payment = entry.payment;
-      if (acc.quincena === '15' || acc.quincena === 'ambas') {
+      const isQ15 = acc.quincena === '15' || acc.quincena === 'ambas';
+      const isQ30 = acc.quincena === '30' || acc.quincena === 'ambas';
+
+      if (isQ15) {
+        const amount = entry.q15Amount || 0;
         total15 += amount;
-        if (payment === 'KALI') { kaliTotal += amount; kali15 += amount; }
-        if (payment === 'BGeneral') { bgenTotal += amount; bgen15 += amount; }
+        if (entry.q15Payment === 'KALI') { kaliTotal += amount; kali15 += amount; }
+        if (entry.q15Payment === 'BGeneral') { bgenTotal += amount; bgen15 += amount; }
       }
-      if (acc.quincena === '30' || acc.quincena === 'ambas') {
+      if (isQ30) {
+        const amount = entry.q30Amount || 0;
         total30 += amount;
-        if (payment === 'KALI') { kaliTotal += amount; kali30 += amount; }
-        if (payment === 'BGeneral') { bgenTotal += amount; bgen30 += amount; }
+        if (entry.q30Payment === 'KALI') { kaliTotal += amount; kali30 += amount; }
+        if (entry.q30Payment === 'BGeneral') { bgenTotal += amount; bgen30 += amount; }
       }
     });
 
@@ -680,22 +705,19 @@
   }
 
   // Modal
-  let preselectedQuincena = null; // para abrir con una quincena preseleccionada
-  function openModal() {
-    document.getElementById('modal').classList.add('open');
-    document.getElementById('newAccountName').focus();
-    // Resetear radios a "ambas" si no hay preselection
-    if (preselectedQuincena) {
-      const radio = document.querySelector(`input[name="quincena"][value="${preselectedQuincena}"]`);
-      if (radio) radio.checked = true;
-      preselectedQuincena = null;
+  function openModal(quincenaPrefilled = null) {
+    const modal = document.getElementById('modal');
+    const radios = document.querySelectorAll('input[name="quincena"]');
+    if (quincenaPrefilled === '15') {
+      radios[0].checked = true;
+    } else if (quincenaPrefilled === '30') {
+      radios[1].checked = true;
     } else {
-      document.querySelector('input[name="quincena"][value="ambas"]').checked = true;
+      radios[2].checked = true; // ambas por defecto
     }
-  }
-  function openModalWithQuincena(q) {
-    preselectedQuincena = q;
-    openModal();
+    document.getElementById('newAccountName').value = '';
+    modal.classList.add('open');
+    document.getElementById('newAccountName').focus();
   }
   function closeModal() { document.getElementById('modal').classList.remove('open'); }
   function addAccountFromModal() {
@@ -706,14 +728,15 @@
     accounts.push({ id: newId, name, quincena });
     saveToLocal();
     closeModal();
-    renderTables();
+    renderColumns();
     showToast(`➕ "${name}" agregada (${quincena === '15' ? 'Q15' : quincena === '30' ? 'Q30' : 'Ambas'})`);
   }
 
+  // Cambio de mes
   function refreshMonth() {
     currentMonth = parseInt(document.getElementById('monthSelect').value);
     currentYear = parseInt(document.getElementById('yearInput').value);
-    renderTables();
+    renderColumns();
   }
 
   function populateMonthSelect() {
@@ -728,6 +751,7 @@
     });
   }
 
+  // Exportar PNG
   async function exportPNG() {
     const el = document.querySelector('.container');
     if (!el) return;
@@ -739,7 +763,7 @@
       link.href = canvas.toDataURL();
       link.click();
       showToast('✅ Imagen guardada');
-    } catch(e) { showToast('❌ Error'); }
+    } catch(e) { showToast('❌ Error al capturar'); }
   }
 
   let toastTimer;
@@ -760,6 +784,14 @@
     document.getElementById('exportBtn').addEventListener('click', exportPNG);
     document.getElementById('modal').addEventListener('click', (e) => { if (e.target === document.getElementById('modal')) closeModal(); });
     document.getElementById('newAccountName').addEventListener('keydown', (e) => { if (e.key === 'Enter') addAccountFromModal(); });
+
+    // Botones dentro de las columnas para agregar cuenta específica
+    document.querySelectorAll('.add-account-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const quincena = btn.getAttribute('data-quincena');
+        openModal(quincena);
+      });
+    });
   }
 
   function init() {
@@ -767,7 +799,7 @@
     populateMonthSelect();
     document.getElementById('yearInput').value = currentYear;
     bindEvents();
-    renderTables();
+    renderColumns();
   }
   init();
 </script>
