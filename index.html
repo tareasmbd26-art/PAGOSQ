@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+  <title>PagoQ · Control quincenal con KALI / BGeneral</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :root {
+      --bg: #f4f6fc;
+      --card: #ffffff;
+      --border: #e2e8f0;
+      --text: #1e293b;
+      --text-light: #64748b;
+      --accent: #3b82f6;
+      --accent-dark: #2563eb;
+      --danger: #ef4444;
+      --danger-bg: #fee2e2;
+      --success: #22c55e;
+      --success-bg: #dcfce7;
+      --kali-bg: #ffedd5;
+      --kali-text: #f97316;
+      --bgeneral-bg: #dbeafe;
+      --bgeneral-text: #2563eb;
+      --efectivo-bg: #f1f5f9;
+      --shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      --radius: 1rem;
+      --radius-sm: 0.75rem;
+    }
+
+    [data-theme="dark"] {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --border: #334155;
+      --text: #f1f5f9;
+      --text-light: #94a3b8;
+      --accent: #60a5fa;
+      --accent-dark: #3b82f6;
+      --kali-bg: #422006;
+      --kali-text: #fdba74;
+      --bgeneral-bg: #1e3a8a;
+      --bgeneral-text: #93c5fd;
+      --efectivo-bg: #1e293b;
+      --shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    body {
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      transition: background 0.2s, color 0.2s;
+      padding-bottom: 2rem;
+    }
+
+    /* Header */
+    .header {
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(4px);
+      background: rgba(var(--card-rgb, 30, 41, 59), 0.95);
+    }
+    .header-inner {
+      max-width: 700px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .logo {
+      font-weight: 700;
+      font-size: 1.3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--accent);
+    }
+    .logo span {
+      background: var(--accent);
+      color: white;
+      width: 32px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      font-size: 1.2rem;
+    }
+    .controls {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .month-group {
+      display: flex;
+      gap: 0.3rem;
+      background: var(--bg);
+      padding: 0.2rem 0.5rem;
+      border-radius: 2rem;
+      border: 1px solid var(--border);
+    }
+    .month-group select, .month-group input {
+      background: transparent;
+      border: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text);
+      padding: 0.4rem 0.2rem;
+      outline: none;
+    }
+    .month-group input {
+      width: 65px;
+    }
+    button {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 2rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    button.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+    button.danger {
+      background: var(--danger-bg);
+      border-color: var(--danger);
+      color: var(--danger);
+    }
+    button:active {
+      transform: scale(0.97);
+    }
+
+    /* main container */
+    .container {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+
+    /* stats cards */
+    .stats {
+      display: flex;
+      gap: 0.8rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .stat-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 0.8rem 1rem;
+      flex: 1;
+      min-width: 130px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+    .stat-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-light);
+    }
+    .stat-number {
+      font-size: 1.6rem;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+    .stat-card.kali {
+      border-left: 4px solid var(--kali-text);
+    }
+    .stat-card.bgeneral {
+      border-left: 4px solid var(--bgeneral-text);
+    }
+
+    /* tabla */
+    .table-wrapper {
+      background: var(--card);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      overflow-x: auto;
+      margin-bottom: 1rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 600px;
+    }
+    th {
+      text-align: left;
+      padding: 1rem 0.75rem 0.75rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-light);
+      border-bottom: 1px solid var(--border);
+    }
+    td {
+      padding: 0.75rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+    .account-name {
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-block;
+      padding: 0.2rem 0;
+      border-bottom: 1px dashed transparent;
+    }
+    .account-name:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .edit-name-input {
+      background: var(--bg);
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      padding: 0.4rem 0.5rem;
+      font-size: 0.9rem;
+      width: 110px;
+      color: var(--text);
+    }
+    .amount-input {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.6rem 0.5rem;
+      font-size: 0.95rem;
+      width: 100%;
+      min-width: 90px;
+      text-align: right;
+      font-weight: 500;
+      color: var(--text);
+      transition: 0.1s;
+    }
+    .amount-input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(59,130,246,0.2);
+    }
+    /* colores de celda según cuenta de pago */
+    .cell-kali {
+      background-color: var(--kali-bg);
+      color: var(--kali-text);
+      border-radius: 12px;
+      font-weight: 600;
+    }
+    .cell-bgeneral {
+      background-color: var(--bgeneral-bg);
+      color: var(--bgeneral-text);
+      border-radius: 12px;
+      font-weight: 600;
+    }
+    .cell-efectivo {
+      background-color: var(--efectivo-bg);
+      color: var(--text-light);
+      border-radius: 12px;
+    }
+    .payment-select {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 0.4rem 0.5rem;
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: var(--text);
+      cursor: pointer;
+      width: 90px;
+    }
+    .delete-btn {
+      background: transparent;
+      border: none;
+      font-size: 1.2rem;
+      padding: 0.3rem;
+      border-radius: 40px;
+      width: 36px;
+      height: 36px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-light);
+    }
+    .delete-btn:hover, .delete-btn:active {
+      background: var(--danger-bg);
+      color: var(--danger);
+    }
+    .add-row td {
+      background: var(--card);
+      padding: 0.75rem;
+    }
+    .add-btn-inline {
+      width: 100%;
+      justify-content: center;
+      background: var(--bg);
+      border: 1px dashed var(--border);
+      border-radius: 2rem;
+      padding: 0.6rem;
+    }
+
+    /* toast */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--accent-dark);
+      color: white;
+      padding: 0.6rem 1.2rem;
+      border-radius: 40px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      transition: transform 0.25s ease;
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* modal */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      visibility: hidden;
+      opacity: 0;
+      transition: 0.2s;
+    }
+    .modal.open {
+      visibility: visible;
+      opacity: 1;
+    }
+    .modal-content {
+      background: var(--card);
+      width: 85%;
+      max-width: 320px;
+      border-radius: 1.5rem;
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+    }
+    .modal-content input {
+      width: 100%;
+      padding: 0.8rem;
+      margin: 1rem 0;
+      border-radius: 1rem;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      font-size: 1rem;
+      color: var(--text);
+    }
+    .modal-buttons {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: flex-end;
+    }
+
+    @media (max-width: 550px) {
+      .stats {
+        flex-direction: column;
+      }
+      .stat-card {
+        width: 100%;
+      }
+      .controls {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .header-inner {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .month-group {
+        justify-content: space-between;
+      }
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <div class="logo">
+      <span>💰</span> PagoQ
+    </div>
+    <div class="controls">
+      <div class="month-group">
+        <select id="monthSelect"></select>
+        <input type="number" id="yearInput" min="2020" max="2040" step="1" value="2025">
+      </div>
+      <button id="themeToggle" aria-label="Tema">🌙</button>
+      <button id="exportBtn" title="Exportar imagen">📸 PNG</button>
+      <button id="addAccountBtn" class="primary">+ Cuenta</button>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+  <div class="stats">
+    <div class="stat-card">
+      <div class="stat-label">💰 TOTAL Q15</div>
+      <div class="stat-number" id="totalQ15">$0.00</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">💳 TOTAL Q30</div>
+      <div class="stat-number" id="totalQ30">$0.00</div>
+    </div>
+    <div class="stat-card kali">
+      <div class="stat-label">🏦 GUARDADO EN KALI</div>
+      <div class="stat-number" id="totalKali">$0.00</div>
+    </div>
+    <div class="stat-card bgeneral">
+      <div class="stat-label">🏧 PAGADO DESDE BGENERAL</div>
+      <div class="stat-number" id="totalBGeneral">$0.00</div>
+    </div>
+  </div>
+
+  <div class="table-wrapper">
+    <table id="mainTable">
+      <thead>
+        <tr><th>Cuenta</th><th>Q15 (15 del mes)</th><th>Cuenta pago Q15</th><th>Q30 (fin de mes)</th><th>Cuenta pago Q30</th><th style="width:50px"></th></tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+</main>
+
+<div id="toast" class="toast">✅ Guardado</div>
+
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <h3>Nueva cuenta</h3>
+    <input type="text" id="newAccountName" placeholder="Ej: Internet, Agua, Luz..." autocomplete="off">
+    <div class="modal-buttons">
+      <button id="modalCancel">Cancelar</button>
+      <button id="modalConfirm" class="primary">Agregar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ---------- MODELO CON CUENTA DE PAGO ----------
+  let accounts = [];          // { id, name }
+  let monthData = {};        // "YYYY-MM": { accountId: { q15: number, q30: number, q15Payment: string, q30Payment: string } }
+  let currentMonth = new Date().getMonth() + 1;
+  let currentYear = new Date().getFullYear();
+
+  const monthNames = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+  const DEFAULT_ACCOUNTS = ["Internet", "Agua", "Luz", "Seguro", "Gym", "Streaming"];
+
+  function monthKey() {
+    return `${currentYear}-${String(currentMonth).padStart(2,'0')}`;
+  }
+
+  function getMonthEntry(accId) {
+    const mk = monthKey();
+    if (!monthData[mk]) monthData[mk] = {};
+    if (!monthData[mk][accId]) {
+      monthData[mk][accId] = {
+        q15: 0,
+        q30: 0,
+        q15Payment: "KALI",     // por defecto KALI para Q15
+        q30Payment: "BGeneral"   // por defecto BGeneral para Q30
+      };
+    }
+    return monthData[mk][accId];
+  }
+
+  function saveToLocal() {
+    localStorage.setItem('pq_kali_accounts', JSON.stringify(accounts));
+    localStorage.setItem('pq_kali_monthData', JSON.stringify(monthData));
+  }
+
+  function loadFromLocal() {
+    const storedAccounts = localStorage.getItem('pq_kali_accounts');
+    if (storedAccounts) {
+      accounts = JSON.parse(storedAccounts);
+    } else {
+      accounts = DEFAULT_ACCOUNTS.map((name, i) => ({ id: `acc_${Date.now() + i}`, name }));
+    }
+    const storedData = localStorage.getItem('pq_kali_monthData');
+    if (storedData) {
+      monthData = JSON.parse(storedData);
+    } else {
+      monthData = {};
+    }
+  }
+
+  // Helper para obtener clase de celda según tipo de pago
+  function getCellClass(payment) {
+    if (payment === "KALI") return "cell-kali";
+    if (payment === "BGeneral") return "cell-bgeneral";
+    return "cell-efectivo";
+  }
+
+  // Calcular totales generales y de KALI / BGeneral
+  function calculateTotals() {
+    let total15 = 0, total30 = 0, totalKali = 0, totalBGen = 0;
+    const mk = monthKey();
+    accounts.forEach(acc => {
+      const entry = monthData[mk]?.[acc.id];
+      if (entry) {
+        const q15 = entry.q15 || 0;
+        const q30 = entry.q30 || 0;
+        total15 += q15;
+        total30 += q30;
+
+        // Si Q15 tiene asignado KALI, suma a KALI, si es BGeneral suma a BGeneral
+        if (entry.q15Payment === "KALI") totalKali += q15;
+        if (entry.q15Payment === "BGeneral") totalBGen += q15;
+        if (entry.q30Payment === "KALI") totalKali += q30;
+        if (entry.q30Payment === "BGeneral") totalBGen += q30;
+      }
+    });
+    document.getElementById('totalQ15').textContent = `$${total15.toLocaleString('es-PA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    document.getElementById('totalQ30').textContent = `$${total30.toLocaleString('es-PA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    document.getElementById('totalKali').textContent = `$${totalKali.toLocaleString('es-PA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    document.getElementById('totalBGeneral').textContent = `$${totalBGen.toLocaleString('es-PA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  }
+
+  function renderTable() {
+    const tbody = document.getElementById('tableBody');
+    tbody.innerHTML = '';
+    const mk = monthKey();
+
+    accounts.forEach(acc => {
+      const entry = getMonthEntry(acc.id);
+      const q15val = entry.q15 || 0;
+      const q30val = entry.q30 || 0;
+      const q15Payment = entry.q15Payment || "KALI";
+      const q30Payment = entry.q30Payment || "BGeneral";
+
+      const row = document.createElement('tr');
+      row.dataset.accountId = acc.id;
+
+      // Nombre
+      const nameCell = document.createElement('td');
+      const nameSpan = document.createElement('span');
+      nameSpan.className = 'account-name';
+      nameSpan.textContent = acc.name;
+      nameSpan.setAttribute('data-id', acc.id);
+      nameSpan.ondblclick = (e) => startEditName(acc.id, nameSpan);
+      nameCell.appendChild(nameSpan);
+      row.appendChild(nameCell);
+
+      // Q15 monto (con color)
+      const q15Cell = document.createElement('td');
+      const q15Input = document.createElement('input');
+      q15Input.type = 'number';
+      q15Input.step = '0.01';
+      q15Input.placeholder = '0.00';
+      q15Input.value = q15val.toFixed(2);
+      q15Input.classList.add('amount-input');
+      q15Input.classList.add(getCellClass(q15Payment)); // color según pago
+      q15Input.dataset.account = acc.id;
+      q15Input.dataset.field = 'q15';
+      q15Input.addEventListener('change', (e) => onAmountChange(acc.id, 'q15', parseFloat(e.target.value) || 0));
+      q15Input.addEventListener('keydown', handleEnterNavigation);
+      q15Cell.appendChild(q15Input);
+      row.appendChild(q15Cell);
+
+      // Selector pago Q15
+      const q15PayCell = document.createElement('td');
+      const q15Select = document.createElement('select');
+      q15Select.classList.add('payment-select');
+      q15Select.innerHTML = `
+        <option value="KALI" ${q15Payment === "KALI" ? "selected" : ""}>🏦 KALI</option>
+        <option value="BGeneral" ${q15Payment === "BGeneral" ? "selected" : ""}>🏧 BGeneral</option>
+        <option value="Efectivo" ${q15Payment === "Efectivo" ? "selected" : ""}>💵 Efectivo</option>
+      `;
+      q15Select.addEventListener('change', (e) => onPaymentChange(acc.id, 'q15Payment', e.target.value));
+      q15Select.addEventListener('keydown', handleEnterNavigation);
+      q15PayCell.appendChild(q15Select);
+      row.appendChild(q15PayCell);
+
+      // Q30 monto (con color)
+      const q30Cell = document.createElement('td');
+      const q30Input = document.createElement('input');
+      q30Input.type = 'number';
+      q30Input.step = '0.01';
+      q30Input.placeholder = '0.00';
+      q30Input.value = q30val.toFixed(2);
+      q30Input.classList.add('amount-input');
+      q30Input.classList.add(getCellClass(q30Payment));
+      q30Input.dataset.account = acc.id;
+      q30Input.dataset.field = 'q30';
+      q30Input.addEventListener('change', (e) => onAmountChange(acc.id, 'q30', parseFloat(e.target.value) || 0));
+      q30Input.addEventListener('keydown', handleEnterNavigation);
+      q30Cell.appendChild(q30Input);
+      row.appendChild(q30Cell);
+
+      // Selector pago Q30
+      const q30PayCell = document.createElement('td');
+      const q30Select = document.createElement('select');
+      q30Select.classList.add('payment-select');
+      q30Select.innerHTML = `
+        <option value="KALI" ${q30Payment === "KALI" ? "selected" : ""}>🏦 KALI</option>
+        <option value="BGeneral" ${q30Payment === "BGeneral" ? "selected" : ""}>🏧 BGeneral</option>
+        <option value="Efectivo" ${q30Payment === "Efectivo" ? "selected" : ""}>💵 Efectivo</option>
+      `;
+      q30Select.addEventListener('change', (e) => onPaymentChange(acc.id, 'q30Payment', e.target.value));
+      q30Select.addEventListener('keydown', handleEnterNavigation);
+      q30PayCell.appendChild(q30Select);
+      row.appendChild(q30PayCell);
+
+      // Botón eliminar
+      const delCell = document.createElement('td');
+      const delBtn = document.createElement('button');
+      delBtn.textContent = '✕';
+      delBtn.classList.add('delete-btn');
+      delBtn.addEventListener('click', () => deleteAccount(acc.id));
+      delCell.appendChild(delBtn);
+      row.appendChild(delCell);
+
+      tbody.appendChild(row);
+    });
+
+    // Fila para agregar cuenta
+    const addRow = document.createElement('tr');
+    addRow.classList.add('add-row');
+    const addCell = document.createElement('td');
+    addCell.colSpan = 6;
+    const addInlineBtn = document.createElement('button');
+    addInlineBtn.textContent = '+ Agregar cuenta';
+    addInlineBtn.classList.add('add-btn-inline');
+    addInlineBtn.addEventListener('click', () => openModal());
+    addCell.appendChild(addInlineBtn);
+    addRow.appendChild(addCell);
+    tbody.appendChild(addRow);
+
+    calculateTotals();
+  }
+
+  function onAmountChange(accountId, field, value) {
+    const mk = monthKey();
+    if (!monthData[mk]) monthData[mk] = {};
+    if (!monthData[mk][accountId]) monthData[mk][accountId] = { q15: 0, q30: 0, q15Payment: "KALI", q30Payment: "BGeneral" };
+    monthData[mk][accountId][field] = value;
+    saveToLocal();
+    renderTable();
+    showToast('✓ Monto guardado');
+  }
+
+  function onPaymentChange(accountId, field, newPayment) {
+    const mk = monthKey();
+    if (!monthData[mk]) monthData[mk] = {};
+    if (!monthData[mk][accountId]) monthData[mk][accountId] = { q15: 0, q30: 0, q15Payment: "KALI", q30Payment: "BGeneral" };
+    monthData[mk][accountId][field] = newPayment;
+    saveToLocal();
+    renderTable(); // refresca colores y totales
+    showToast('✓ Cuenta de pago actualizada');
+  }
+
+  function startEditName(accountId, spanElement) {
+    const currentName = spanElement.textContent;
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.value = currentName;
+    input.classList.add('edit-name-input');
+    const saveEdit = () => {
+      const newName = input.value.trim();
+      if (newName) {
+        const acc = accounts.find(a => a.id === accountId);
+        if (acc) acc.name = newName;
+        saveToLocal();
+      }
+      renderTable();
+    };
+    input.addEventListener('blur', saveEdit);
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') saveEdit();
+      if (e.key === 'Escape') renderTable();
+    });
+    spanElement.replaceWith(input);
+    input.focus();
+  }
+
+  function deleteAccount(accountId) {
+    const acc = accounts.find(a => a.id === accountId);
+    if (!confirm(`¿Eliminar "${acc?.name}"?`)) return;
+    accounts = accounts.filter(a => a.id !== accountId);
+    const mk = monthKey();
+    if (monthData[mk] && monthData[mk][accountId]) delete monthData[mk][accountId];
+    saveToLocal();
+    renderTable();
+    showToast('Cuenta eliminada');
+  }
+
+  function handleEnterNavigation(e) {
+    if (e.key !== 'Enter') return;
+    e.preventDefault();
+    const focusable = Array.from(document.querySelectorAll('#tableBody .amount-input, #tableBody .payment-select'));
+    const idx = focusable.indexOf(e.target);
+    if (idx !== -1 && idx + 1 < focusable.length) {
+      focusable[idx + 1].focus();
+    } else {
+      // Si es el último, agregar nueva cuenta automáticamente
+      const newName = `Cuenta ${accounts.length + 1}`;
+      const newId = 'acc_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+      accounts.push({ id: newId, name: newName });
+      saveToLocal();
+      renderTable();
+      setTimeout(() => {
+        const newInputs = Array.from(document.querySelectorAll('#tableBody .amount-input'));
+        if (newInputs.length) newInputs[newInputs.length - 2]?.focus();
+      }, 30);
+      showToast('➕ Nueva cuenta agregada (doble clic para editar nombre)');
+    }
+  }
+
+  function refreshMonth() {
+    currentMonth = parseInt(document.getElementById('monthSelect').value);
+    currentYear = parseInt(document.getElementById('yearInput').value);
+    renderTable();
+  }
+
+  function populateMonthSelect() {
+    const select = document.getElementById('monthSelect');
+    select.innerHTML = '';
+    monthNames.forEach((name, idx) => {
+      const option = document.createElement('option');
+      option.value = idx + 1;
+      option.textContent = name;
+      if (idx + 1 === currentMonth) option.selected = true;
+      select.appendChild(option);
+    });
+  }
+
+  function initTheme() {
+    const stored = localStorage.getItem('pq_kali_theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const theme = stored || (prefersDark ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', theme);
+    document.getElementById('themeToggle').textContent = theme === 'dark' ? '☀️' : '🌙';
+  }
+  function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('pq_kali_theme', next);
+    document.getElementById('themeToggle').textContent = next === 'dark' ? '☀️' : '🌙';
+  }
+
+  async function exportAsPNG() {
+    const element = document.querySelector('.container');
+    if (!element) return;
+    showToast('📷 Generando imagen...');
+    try {
+      const canvas = await html2canvas(element, { scale: 2, backgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--bg'), logging: false });
+      const link = document.createElement('a');
+      link.download = `PagoQ_${monthNames[currentMonth-1]}_${currentYear}.png`;
+      link.href = canvas.toDataURL();
+      link.click();
+      showToast('✅ Imagen guardada');
+    } catch (err) {
+      showToast('❌ Error al capturar');
+    }
+  }
+
+  let toastTimeout;
+  function showToast(msg) {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(() => toast.classList.remove('show'), 2000);
+  }
+
+  function openModal() {
+    document.getElementById('modal').classList.add('open');
+    document.getElementById('newAccountName').focus();
+  }
+  function closeModal() { document.getElementById('modal').classList.remove('open'); }
+  function addAccountFromModal() {
+    const name = document.getElementById('newAccountName').value.trim();
+    if (!name) return showToast('❌ Escribe un nombre');
+    accounts.push({ id: 'acc_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6), name });
+    saveToLocal();
+    closeModal();
+    renderTable();
+    showToast(`➕ "${name}" agregada`);
+  }
+
+  function bindEvents() {
+    document.getElementById('monthSelect').addEventListener('change', refreshMonth);
+    document.getElementById('yearInput').addEventListener('change', refreshMonth);
+    document.getElementById('addAccountBtn').addEventListener('click', openModal);
+    document.getElementById('modalCancel').addEventListener('click', closeModal);
+    document.getElementById('modalConfirm').addEventListener('click', addAccountFromModal);
+    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+    document.getElementById('exportBtn').addEventListener('click', exportAsPNG);
+    document.getElementById('modal').addEventListener('click', (e) => { if (e.target === document.getElementById('modal')) closeModal(); });
+    document.getElementById('newAccountName').addEventListener('keydown', (e) => { if (e.key === 'Enter') addAccountFromModal(); });
+  }
+
+  function init() {
+    loadFromLocal();
+    populateMonthSelect();
+    document.getElementById('yearInput').value = currentYear;
+    bindEvents();
+    initTheme();
+    renderTable();
+  }
+  init();
+</script>
+</body>
+</html>
