@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
-  <title>PagoQ · Control quincenal con KALI / BGeneral</title>
+  <title>PagoQ · Control KALI / BGeneral</title>
   <style>
     * {
       margin: 0;
@@ -13,48 +13,25 @@
     }
 
     :root {
-      --bg: #f4f6fc;
+      --bg: #f8fafc;
       --card: #ffffff;
       --border: #e2e8f0;
-      --text: #1e293b;
-      --text-light: #64748b;
+      --text: #0f172a;
+      --text-light: #475569;
       --accent: #3b82f6;
-      --accent-dark: #2563eb;
-      --danger: #ef4444;
-      --danger-bg: #fee2e2;
-      --success: #22c55e;
-      --success-bg: #dcfce7;
       --kali-bg: #ffedd5;
-      --kali-text: #f97316;
-      --bgeneral-bg: #dbeafe;
-      --bgeneral-text: #2563eb;
+      --kali-text: #c2410c;
+      --bgeneral-bg: #dcfce7;
+      --bgeneral-text: #15803d;
       --efectivo-bg: #f1f5f9;
-      --shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      --shadow: 0 1px 3px rgba(0,0,0,0.05);
       --radius: 1rem;
-      --radius-sm: 0.75rem;
-    }
-
-    [data-theme="dark"] {
-      --bg: #0f172a;
-      --card: #1e293b;
-      --border: #334155;
-      --text: #f1f5f9;
-      --text-light: #94a3b8;
-      --accent: #60a5fa;
-      --accent-dark: #3b82f6;
-      --kali-bg: #422006;
-      --kali-text: #fdba74;
-      --bgeneral-bg: #1e3a8a;
-      --bgeneral-text: #93c5fd;
-      --efectivo-bg: #1e293b;
-      --shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     }
 
     body {
-      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
       background: var(--bg);
       color: var(--text);
-      transition: background 0.2s, color 0.2s;
       padding-bottom: 2rem;
     }
 
@@ -66,8 +43,8 @@
       position: sticky;
       top: 0;
       z-index: 10;
+      background: rgba(255,255,255,0.95);
       backdrop-filter: blur(4px);
-      background: rgba(var(--card-rgb, 30, 41, 59), 0.95);
     }
     .header-inner {
       max-width: 700px;
@@ -141,35 +118,29 @@
       border-color: var(--accent);
       color: white;
     }
-    button.danger {
-      background: var(--danger-bg);
-      border-color: var(--danger);
-      color: var(--danger);
-    }
     button:active {
       transform: scale(0.97);
     }
 
-    /* main container */
     .container {
       max-width: 700px;
       margin: 0 auto;
       padding: 1rem;
     }
 
-    /* stats cards */
-    .stats {
+    /* Stats grid */
+    .stats-grid {
       display: flex;
-      gap: 0.8rem;
-      margin-bottom: 1.5rem;
       flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
     }
     .stat-card {
       background: var(--card);
       border-radius: var(--radius);
-      padding: 0.8rem 1rem;
-      flex: 1;
-      min-width: 130px;
+      padding: 0.75rem 1rem;
+      flex: 1 1 calc(50% - 0.75rem);
+      min-width: 140px;
       border: 1px solid var(--border);
       box-shadow: var(--shadow);
     }
@@ -178,11 +149,17 @@
       text-transform: uppercase;
       letter-spacing: 0.5px;
       color: var(--text-light);
+      margin-bottom: 0.25rem;
     }
     .stat-number {
-      font-size: 1.6rem;
+      font-size: 1.5rem;
       font-weight: 700;
       line-height: 1.2;
+    }
+    .stat-detail {
+      font-size: 0.75rem;
+      color: var(--text-light);
+      margin-top: 0.25rem;
     }
     .stat-card.kali {
       border-left: 4px solid var(--kali-text);
@@ -191,7 +168,7 @@
       border-left: 4px solid var(--bgeneral-text);
     }
 
-    /* tabla */
+    /* Tabla */
     .table-wrapper {
       background: var(--card);
       border-radius: var(--radius);
@@ -202,18 +179,18 @@
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 600px;
+      min-width: 550px;
     }
     th {
       text-align: left;
-      padding: 1rem 0.75rem 0.75rem;
-      font-size: 0.75rem;
+      padding: 0.9rem 0.75rem 0.6rem;
+      font-size: 0.7rem;
       font-weight: 600;
       color: var(--text-light);
       border-bottom: 1px solid var(--border);
     }
     td {
-      padding: 0.75rem;
+      padding: 0.7rem 0.75rem;
       border-bottom: 1px solid var(--border);
       vertical-align: middle;
     }
@@ -232,22 +209,20 @@
       background: var(--bg);
       border: 1px solid var(--accent);
       border-radius: 8px;
-      padding: 0.4rem 0.5rem;
-      font-size: 0.9rem;
+      padding: 0.3rem 0.5rem;
+      font-size: 0.85rem;
       width: 110px;
-      color: var(--text);
     }
     .amount-input {
       background: var(--bg);
       border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 0.6rem 0.5rem;
-      font-size: 0.95rem;
+      border-radius: 12px;
+      padding: 0.5rem 0.5rem;
+      font-size: 0.9rem;
       width: 100%;
-      min-width: 90px;
+      min-width: 85px;
       text-align: right;
       font-weight: 500;
-      color: var(--text);
       transition: 0.1s;
     }
     .amount-input:focus {
@@ -255,7 +230,7 @@
       border-color: var(--accent);
       box-shadow: 0 0 0 2px rgba(59,130,246,0.2);
     }
-    /* colores de celda según cuenta de pago */
+    /* Colores según cuenta de pago */
     .cell-kali {
       background-color: var(--kali-bg);
       color: var(--kali-text);
@@ -277,12 +252,19 @@
       background: var(--bg);
       border: 1px solid var(--border);
       border-radius: 20px;
-      padding: 0.4rem 0.5rem;
+      padding: 0.35rem 0.5rem;
       font-size: 0.7rem;
       font-weight: 500;
-      color: var(--text);
-      cursor: pointer;
-      width: 90px;
+      width: 85px;
+    }
+    .quincena-badge {
+      display: inline-block;
+      background: var(--bg);
+      padding: 0.2rem 0.5rem;
+      border-radius: 20px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: var(--text-light);
     }
     .delete-btn {
       background: transparent;
@@ -290,16 +272,16 @@
       font-size: 1.2rem;
       padding: 0.3rem;
       border-radius: 40px;
-      width: 36px;
-      height: 36px;
+      width: 34px;
+      height: 34px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       color: var(--text-light);
     }
-    .delete-btn:hover, .delete-btn:active {
-      background: var(--danger-bg);
-      color: var(--danger);
+    .delete-btn:active {
+      background: #fee2e2;
+      color: #ef4444;
     }
     .add-row td {
       background: var(--card);
@@ -314,30 +296,7 @@
       padding: 0.6rem;
     }
 
-    /* toast */
-    .toast {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%) translateY(100px);
-      background: var(--accent-dark);
-      color: white;
-      padding: 0.6rem 1.2rem;
-      border-radius: 40px;
-      font-size: 0.85rem;
-      font-weight: 500;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-      transition: transform 0.25s ease;
-      z-index: 200;
-      opacity: 0;
-      pointer-events: none;
-    }
-    .toast.show {
-      transform: translateX(-50%) translateY(0);
-      opacity: 1;
-    }
-
-    /* modal */
+    /* Modal */
     .modal {
       position: fixed;
       top: 0;
@@ -365,38 +324,67 @@
       padding: 1.5rem;
       border: 1px solid var(--border);
     }
-    .modal-content input {
+    .modal-content input, .modal-content select {
       width: 100%;
       padding: 0.8rem;
-      margin: 1rem 0;
+      margin: 0.5rem 0 1rem;
       border-radius: 1rem;
       border: 1px solid var(--border);
       background: var(--bg);
       font-size: 1rem;
-      color: var(--text);
+    }
+    .radio-group {
+      display: flex;
+      gap: 1rem;
+      margin: 0.5rem 0 1rem;
+    }
+    .radio-group label {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.9rem;
     }
     .modal-buttons {
       display: flex;
       gap: 0.5rem;
       justify-content: flex-end;
+      margin-top: 0.5rem;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #0f172a;
+      color: white;
+      padding: 0.6rem 1.2rem;
+      border-radius: 40px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      transition: transform 0.25s;
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
     }
 
     @media (max-width: 550px) {
-      .stats {
+      .stats-grid {
         flex-direction: column;
       }
       .stat-card {
         width: 100%;
       }
-      .controls {
-        width: 100%;
-        justify-content: space-between;
-      }
       .header-inner {
         flex-direction: column;
         align-items: stretch;
       }
-      .month-group {
+      .controls {
         justify-content: space-between;
       }
     }
@@ -407,57 +395,48 @@
 
 <header class="header">
   <div class="header-inner">
-    <div class="logo">
-      <span>💰</span> PagoQ
-    </div>
+    <div class="logo"><span>💰</span> PagoQ</div>
     <div class="controls">
       <div class="month-group">
         <select id="monthSelect"></select>
         <input type="number" id="yearInput" min="2020" max="2040" step="1" value="2025">
       </div>
-      <button id="themeToggle" aria-label="Tema">🌙</button>
-      <button id="exportBtn" title="Exportar imagen">📸 PNG</button>
+      <button id="exportBtn">📸 PNG</button>
       <button id="addAccountBtn" class="primary">+ Cuenta</button>
     </div>
   </div>
 </header>
 
 <main class="container">
-  <div class="stats">
-    <div class="stat-card">
-      <div class="stat-label">💰 TOTAL Q15</div>
-      <div class="stat-number" id="totalQ15">$0.00</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">💳 TOTAL Q30</div>
-      <div class="stat-number" id="totalQ30">$0.00</div>
-    </div>
-    <div class="stat-card kali">
-      <div class="stat-label">🏦 GUARDADO EN KALI</div>
-      <div class="stat-number" id="totalKali">$0.00</div>
-    </div>
-    <div class="stat-card bgeneral">
-      <div class="stat-label">🏧 PAGADO DESDE BGENERAL</div>
-      <div class="stat-number" id="totalBGeneral">$0.00</div>
-    </div>
+  <div class="stats-grid" id="statsGrid">
+    <div class="stat-card"><div class="stat-label">💰 TOTAL Q15</div><div class="stat-number" id="totalQ15">$0.00</div><div class="stat-detail" id="detailQ15"></div></div>
+    <div class="stat-card"><div class="stat-label">💳 TOTAL Q30</div><div class="stat-number" id="totalQ30">$0.00</div><div class="stat-detail" id="detailQ30"></div></div>
+    <div class="stat-card kali"><div class="stat-label">🏦 GUARDADO EN KALI</div><div class="stat-number" id="totalKali">$0.00</div><div class="stat-detail" id="detailKali"></div></div>
+    <div class="stat-card bgeneral"><div class="stat-label">🏧 PAGADO CON BGENERAL</div><div class="stat-number" id="totalBGen">$0.00</div><div class="stat-detail" id="detailBGen"></div></div>
   </div>
 
   <div class="table-wrapper">
     <table id="mainTable">
       <thead>
-        <tr><th>Cuenta</th><th>Q15 (15 del mes)</th><th>Cuenta pago Q15</th><th>Q30 (fin de mes)</th><th>Cuenta pago Q30</th><th style="width:50px"></th></tr>
+        <tr><th>Cuenta</th><th>Monto</th><th>Cuenta de pago</th><th style="width:40px"></th></tr>
       </thead>
       <tbody id="tableBody"></tbody>
     </table>
   </div>
 </main>
 
-<div id="toast" class="toast">✅ Guardado</div>
+<div id="toast" class="toast"></div>
 
 <div id="modal" class="modal">
   <div class="modal-content">
-    <h3>Nueva cuenta</h3>
-    <input type="text" id="newAccountName" placeholder="Ej: Internet, Agua, Luz..." autocomplete="off">
+    <h3>➕ Nueva cuenta</h3>
+    <input type="text" id="newAccountName" placeholder="Nombre (ej: Internet)" autocomplete="off">
+    <label>¿Para qué quincena?</label>
+    <div class="radio-group">
+      <label><input type="radio" name="quincena" value="15" checked> Q15 (15 del mes)</label>
+      <label><input type="radio" name="quincena" value="30"> Q30 (fin de mes)</label>
+      <label><input type="radio" name="quincena" value="ambas"> Ambas</label>
+    </div>
     <div class="modal-buttons">
       <button id="modalCancel">Cancelar</button>
       <button id="modalConfirm" class="primary">Agregar</button>
@@ -466,83 +445,86 @@
 </div>
 
 <script>
-  // ---------- MODELO CON CUENTA DE PAGO ----------
-  let accounts = [];          // { id, name }
-  let monthData = {};        // "YYYY-MM": { accountId: { q15: number, q30: number, q15Payment: string, q30Payment: string } }
+  // ---------- MODELO ----------
+  let accounts = [];           // { id, name, quincena: "15" | "30" | "ambas" }
+  let monthData = {};          // "YYYY-MM": { accountId: { amount: number, payment: string } }
   let currentMonth = new Date().getMonth() + 1;
   let currentYear = new Date().getFullYear();
 
   const monthNames = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
-  const DEFAULT_ACCOUNTS = ["Internet", "Agua", "Luz", "Seguro", "Gym", "Streaming"];
 
-  function monthKey() {
-    return `${currentYear}-${String(currentMonth).padStart(2,'0')}`;
-  }
+  function monthKey() { return `${currentYear}-${String(currentMonth).padStart(2,'0')}`; }
 
-  function getMonthEntry(accId) {
+  function getEntry(accId) {
     const mk = monthKey();
     if (!monthData[mk]) monthData[mk] = {};
     if (!monthData[mk][accId]) {
-      monthData[mk][accId] = {
-        q15: 0,
-        q30: 0,
-        q15Payment: "KALI",     // por defecto KALI para Q15
-        q30Payment: "BGeneral"   // por defecto BGeneral para Q30
-      };
+      monthData[mk][accId] = { amount: 0, payment: "KALI" };
     }
     return monthData[mk][accId];
   }
 
   function saveToLocal() {
-    localStorage.setItem('pq_kali_accounts', JSON.stringify(accounts));
-    localStorage.setItem('pq_kali_monthData', JSON.stringify(monthData));
+    localStorage.setItem('pq_dual_accounts', JSON.stringify(accounts));
+    localStorage.setItem('pq_dual_monthData', JSON.stringify(monthData));
   }
 
   function loadFromLocal() {
-    const storedAccounts = localStorage.getItem('pq_kali_accounts');
+    const storedAccounts = localStorage.getItem('pq_dual_accounts');
     if (storedAccounts) {
       accounts = JSON.parse(storedAccounts);
     } else {
-      accounts = DEFAULT_ACCOUNTS.map((name, i) => ({ id: `acc_${Date.now() + i}`, name }));
+      accounts = [
+        { id: 'acc_1', name: 'Internet', quincena: 'ambas' },
+        { id: 'acc_2', name: 'Agua', quincena: 'ambas' },
+        { id: 'acc_3', name: 'Luz', quincena: '30' },
+        { id: 'acc_4', name: 'Seguro', quincena: '15' },
+      ];
     }
-    const storedData = localStorage.getItem('pq_kali_monthData');
-    if (storedData) {
-      monthData = JSON.parse(storedData);
-    } else {
-      monthData = {};
-    }
+    const storedData = localStorage.getItem('pq_dual_monthData');
+    if (storedData) monthData = JSON.parse(storedData);
+    else monthData = {};
   }
 
-  // Helper para obtener clase de celda según tipo de pago
+  // Colores
   function getCellClass(payment) {
     if (payment === "KALI") return "cell-kali";
     if (payment === "BGeneral") return "cell-bgeneral";
     return "cell-efectivo";
   }
 
-  // Calcular totales generales y de KALI / BGeneral
-  function calculateTotals() {
-    let total15 = 0, total30 = 0, totalKali = 0, totalBGen = 0;
+  // Actualizar totales y detalles
+  function updateTotals() {
     const mk = monthKey();
+    let total15 = 0, total30 = 0, kaliTotal = 0, bgenTotal = 0;
+    let kali15 = 0, kali30 = 0, bgen15 = 0, bgen30 = 0;
+
     accounts.forEach(acc => {
       const entry = monthData[mk]?.[acc.id];
-      if (entry) {
-        const q15 = entry.q15 || 0;
-        const q30 = entry.q30 || 0;
-        total15 += q15;
-        total30 += q30;
-
-        // Si Q15 tiene asignado KALI, suma a KALI, si es BGeneral suma a BGeneral
-        if (entry.q15Payment === "KALI") totalKali += q15;
-        if (entry.q15Payment === "BGeneral") totalBGen += q15;
-        if (entry.q30Payment === "KALI") totalKali += q30;
-        if (entry.q30Payment === "BGeneral") totalBGen += q30;
+      if (!entry) return;
+      const amount = entry.amount || 0;
+      const payment = entry.payment;
+      if (acc.quincena === "15" || acc.quincena === "ambas") {
+        total15 += amount;
+        if (payment === "KALI") { kaliTotal += amount; kali15 += amount; }
+        if (payment === "BGeneral") { bgenTotal += amount; bgen15 += amount; }
+      }
+      if (acc.quincena === "30" || acc.quincena === "ambas") {
+        total30 += amount;
+        if (payment === "KALI") { kaliTotal += amount; kali30 += amount; }
+        if (payment === "BGeneral") { bgenTotal += amount; bgen30 += amount; }
       }
     });
-    document.getElementById('totalQ15').textContent = `$${total15.toLocaleString('es-PA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-    document.getElementById('totalQ30').textContent = `$${total30.toLocaleString('es-PA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-    document.getElementById('totalKali').textContent = `$${totalKali.toLocaleString('es-PA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-    document.getElementById('totalBGeneral').textContent = `$${totalBGen.toLocaleString('es-PA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+    document.getElementById('totalQ15').textContent = `$${total15.toLocaleString('es-PA', { min:2, max:2 })}`;
+    document.getElementById('totalQ30').textContent = `$${total30.toLocaleString('es-PA', { min:2, max:2 })}`;
+    document.getElementById('totalKali').textContent = `$${kaliTotal.toLocaleString('es-PA', { min:2, max:2 })}`;
+    document.getElementById('totalBGen').textContent = `$${bgenTotal.toLocaleString('es-PA', { min:2, max:2 })}`;
+
+    document.getElementById('detailQ15').innerHTML = `🏦 KALI: $${kali15.toFixed(2)} &nbsp;|&nbsp; 🏧 BGen: $${bgen15.toFixed(2)}`;
+    document.getElementById('detailQ30').innerHTML = `🏦 KALI: $${kali30.toFixed(2)} &nbsp;|&nbsp; 🏧 BGen: $${bgen30.toFixed(2)}`;
+    document.getElementById('detailKali').innerHTML = `Q15: $${kali15.toFixed(2)} | Q30: $${kali30.toFixed(2)}`;
+    document.getElementById('detailBGen').innerHTML = `Q15: $${bgen15.toFixed(2)} | Q30: $${bgen30.toFixed(2)}`;
   }
 
   function renderTable() {
@@ -551,86 +533,56 @@
     const mk = monthKey();
 
     accounts.forEach(acc => {
-      const entry = getMonthEntry(acc.id);
-      const q15val = entry.q15 || 0;
-      const q30val = entry.q30 || 0;
-      const q15Payment = entry.q15Payment || "KALI";
-      const q30Payment = entry.q30Payment || "BGeneral";
+      const entry = getEntry(acc.id);
+      const amount = entry.amount;
+      const payment = entry.payment;
 
       const row = document.createElement('tr');
-      row.dataset.accountId = acc.id;
-
-      // Nombre
+      // Nombre con badge de quincena
       const nameCell = document.createElement('td');
       const nameSpan = document.createElement('span');
       nameSpan.className = 'account-name';
       nameSpan.textContent = acc.name;
-      nameSpan.setAttribute('data-id', acc.id);
-      nameSpan.ondblclick = (e) => startEditName(acc.id, nameSpan);
+      nameSpan.ondblclick = () => startEditName(acc.id, nameSpan);
+      const badge = document.createElement('span');
+      badge.className = 'quincena-badge';
+      if (acc.quincena === '15') badge.textContent = 'Q15';
+      else if (acc.quincena === '30') badge.textContent = 'Q30';
+      else badge.textContent = '15+30';
+      badge.style.marginLeft = '6px';
       nameCell.appendChild(nameSpan);
+      nameCell.appendChild(badge);
       row.appendChild(nameCell);
 
-      // Q15 monto (con color)
-      const q15Cell = document.createElement('td');
-      const q15Input = document.createElement('input');
-      q15Input.type = 'number';
-      q15Input.step = '0.01';
-      q15Input.placeholder = '0.00';
-      q15Input.value = q15val.toFixed(2);
-      q15Input.classList.add('amount-input');
-      q15Input.classList.add(getCellClass(q15Payment)); // color según pago
-      q15Input.dataset.account = acc.id;
-      q15Input.dataset.field = 'q15';
-      q15Input.addEventListener('change', (e) => onAmountChange(acc.id, 'q15', parseFloat(e.target.value) || 0));
-      q15Input.addEventListener('keydown', handleEnterNavigation);
-      q15Cell.appendChild(q15Input);
-      row.appendChild(q15Cell);
+      // Monto
+      const amountCell = document.createElement('td');
+      const amountInput = document.createElement('input');
+      amountInput.type = 'number';
+      amountInput.step = '0.01';
+      amountInput.placeholder = '0.00';
+      amountInput.value = amount.toFixed(2);
+      amountInput.classList.add('amount-input');
+      amountInput.classList.add(getCellClass(payment));
+      amountInput.addEventListener('change', (e) => onAmountChange(acc.id, parseFloat(e.target.value) || 0));
+      amountInput.addEventListener('keydown', handleEnterNavigation);
+      amountCell.appendChild(amountInput);
+      row.appendChild(amountCell);
 
-      // Selector pago Q15
-      const q15PayCell = document.createElement('td');
-      const q15Select = document.createElement('select');
-      q15Select.classList.add('payment-select');
-      q15Select.innerHTML = `
-        <option value="KALI" ${q15Payment === "KALI" ? "selected" : ""}>🏦 KALI</option>
-        <option value="BGeneral" ${q15Payment === "BGeneral" ? "selected" : ""}>🏧 BGeneral</option>
-        <option value="Efectivo" ${q15Payment === "Efectivo" ? "selected" : ""}>💵 Efectivo</option>
+      // Selector pago
+      const payCell = document.createElement('td');
+      const paySelect = document.createElement('select');
+      paySelect.classList.add('payment-select');
+      paySelect.innerHTML = `
+        <option value="KALI" ${payment === "KALI" ? "selected" : ""}>🏦 KALI</option>
+        <option value="BGeneral" ${payment === "BGeneral" ? "selected" : ""}>🏧 BGeneral</option>
+        <option value="Efectivo" ${payment === "Efectivo" ? "selected" : ""}>💵 Efectivo</option>
       `;
-      q15Select.addEventListener('change', (e) => onPaymentChange(acc.id, 'q15Payment', e.target.value));
-      q15Select.addEventListener('keydown', handleEnterNavigation);
-      q15PayCell.appendChild(q15Select);
-      row.appendChild(q15PayCell);
+      paySelect.addEventListener('change', (e) => onPaymentChange(acc.id, e.target.value));
+      paySelect.addEventListener('keydown', handleEnterNavigation);
+      payCell.appendChild(paySelect);
+      row.appendChild(payCell);
 
-      // Q30 monto (con color)
-      const q30Cell = document.createElement('td');
-      const q30Input = document.createElement('input');
-      q30Input.type = 'number';
-      q30Input.step = '0.01';
-      q30Input.placeholder = '0.00';
-      q30Input.value = q30val.toFixed(2);
-      q30Input.classList.add('amount-input');
-      q30Input.classList.add(getCellClass(q30Payment));
-      q30Input.dataset.account = acc.id;
-      q30Input.dataset.field = 'q30';
-      q30Input.addEventListener('change', (e) => onAmountChange(acc.id, 'q30', parseFloat(e.target.value) || 0));
-      q30Input.addEventListener('keydown', handleEnterNavigation);
-      q30Cell.appendChild(q30Input);
-      row.appendChild(q30Cell);
-
-      // Selector pago Q30
-      const q30PayCell = document.createElement('td');
-      const q30Select = document.createElement('select');
-      q30Select.classList.add('payment-select');
-      q30Select.innerHTML = `
-        <option value="KALI" ${q30Payment === "KALI" ? "selected" : ""}>🏦 KALI</option>
-        <option value="BGeneral" ${q30Payment === "BGeneral" ? "selected" : ""}>🏧 BGeneral</option>
-        <option value="Efectivo" ${q30Payment === "Efectivo" ? "selected" : ""}>💵 Efectivo</option>
-      `;
-      q30Select.addEventListener('change', (e) => onPaymentChange(acc.id, 'q30Payment', e.target.value));
-      q30Select.addEventListener('keydown', handleEnterNavigation);
-      q30PayCell.appendChild(q30Select);
-      row.appendChild(q30PayCell);
-
-      // Botón eliminar
+      // Eliminar
       const delCell = document.createElement('td');
       const delBtn = document.createElement('button');
       delBtn.textContent = '✕';
@@ -646,68 +598,61 @@
     const addRow = document.createElement('tr');
     addRow.classList.add('add-row');
     const addCell = document.createElement('td');
-    addCell.colSpan = 6;
-    const addInlineBtn = document.createElement('button');
-    addInlineBtn.textContent = '+ Agregar cuenta';
-    addInlineBtn.classList.add('add-btn-inline');
-    addInlineBtn.addEventListener('click', () => openModal());
-    addCell.appendChild(addInlineBtn);
+    addCell.colSpan = 4;
+    const addBtn = document.createElement('button');
+    addBtn.textContent = '+ Agregar cuenta';
+    addBtn.classList.add('add-btn-inline');
+    addBtn.addEventListener('click', () => openModal());
+    addCell.appendChild(addBtn);
     addRow.appendChild(addCell);
     tbody.appendChild(addRow);
 
-    calculateTotals();
+    updateTotals();
   }
 
-  function onAmountChange(accountId, field, value) {
+  function onAmountChange(accountId, value) {
     const mk = monthKey();
     if (!monthData[mk]) monthData[mk] = {};
-    if (!monthData[mk][accountId]) monthData[mk][accountId] = { q15: 0, q30: 0, q15Payment: "KALI", q30Payment: "BGeneral" };
-    monthData[mk][accountId][field] = value;
+    if (!monthData[mk][accountId]) monthData[mk][accountId] = { amount: 0, payment: "KALI" };
+    monthData[mk][accountId].amount = value;
     saveToLocal();
     renderTable();
     showToast('✓ Monto guardado');
   }
 
-  function onPaymentChange(accountId, field, newPayment) {
+  function onPaymentChange(accountId, newPayment) {
     const mk = monthKey();
     if (!monthData[mk]) monthData[mk] = {};
-    if (!monthData[mk][accountId]) monthData[mk][accountId] = { q15: 0, q30: 0, q15Payment: "KALI", q30Payment: "BGeneral" };
-    monthData[mk][accountId][field] = newPayment;
+    if (!monthData[mk][accountId]) monthData[mk][accountId] = { amount: 0, payment: "KALI" };
+    monthData[mk][accountId].payment = newPayment;
     saveToLocal();
-    renderTable(); // refresca colores y totales
+    renderTable();
     showToast('✓ Cuenta de pago actualizada');
   }
 
-  function startEditName(accountId, spanElement) {
-    const currentName = spanElement.textContent;
+  function startEditName(accountId, spanElem) {
+    const acc = accounts.find(a => a.id === accountId);
     const input = document.createElement('input');
-    input.type = 'text';
-    input.value = currentName;
+    input.value = acc.name;
     input.classList.add('edit-name-input');
-    const saveEdit = () => {
+    const save = () => {
       const newName = input.value.trim();
-      if (newName) {
-        const acc = accounts.find(a => a.id === accountId);
-        if (acc) acc.name = newName;
-        saveToLocal();
-      }
+      if (newName) acc.name = newName;
+      saveToLocal();
       renderTable();
     };
-    input.addEventListener('blur', saveEdit);
-    input.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') saveEdit();
-      if (e.key === 'Escape') renderTable();
-    });
-    spanElement.replaceWith(input);
+    input.addEventListener('blur', save);
+    input.addEventListener('keydown', (e) => { if (e.key === 'Enter') save(); else if (e.key === 'Escape') renderTable(); });
+    spanElem.replaceWith(input);
     input.focus();
   }
 
-  function deleteAccount(accountId) {
-    const acc = accounts.find(a => a.id === accountId);
-    if (!confirm(`¿Eliminar "${acc?.name}"?`)) return;
-    accounts = accounts.filter(a => a.id !== accountId);
+  function deleteAccount(id) {
+    const acc = accounts.find(a => a.id === id);
+    if (!confirm(`¿Eliminar "${acc.name}"?`)) return;
+    accounts = accounts.filter(a => a.id !== id);
     const mk = monthKey();
-    if (monthData[mk] && monthData[mk][accountId]) delete monthData[mk][accountId];
+    if (monthData[mk] && monthData[mk][id]) delete monthData[mk][id];
     saveToLocal();
     renderTable();
     showToast('Cuenta eliminada');
@@ -718,21 +663,29 @@
     e.preventDefault();
     const focusable = Array.from(document.querySelectorAll('#tableBody .amount-input, #tableBody .payment-select'));
     const idx = focusable.indexOf(e.target);
-    if (idx !== -1 && idx + 1 < focusable.length) {
-      focusable[idx + 1].focus();
-    } else {
-      // Si es el último, agregar nueva cuenta automáticamente
-      const newName = `Cuenta ${accounts.length + 1}`;
-      const newId = 'acc_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
-      accounts.push({ id: newId, name: newName });
-      saveToLocal();
-      renderTable();
-      setTimeout(() => {
-        const newInputs = Array.from(document.querySelectorAll('#tableBody .amount-input'));
-        if (newInputs.length) newInputs[newInputs.length - 2]?.focus();
-      }, 30);
-      showToast('➕ Nueva cuenta agregada (doble clic para editar nombre)');
+    if (idx !== -1 && idx + 1 < focusable.length) focusable[idx + 1].focus();
+    else {
+      // Al final, crear cuenta nueva
+      openModal();
     }
+  }
+
+  // Modal
+  function openModal() {
+    document.getElementById('modal').classList.add('open');
+    document.getElementById('newAccountName').focus();
+  }
+  function closeModal() { document.getElementById('modal').classList.remove('open'); }
+  function addAccountFromModal() {
+    const name = document.getElementById('newAccountName').value.trim();
+    if (!name) { showToast('❌ Escribe un nombre'); return; }
+    const quincena = document.querySelector('input[name="quincena"]:checked').value;
+    const newId = 'acc_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+    accounts.push({ id: newId, name, quincena });
+    saveToLocal();
+    closeModal();
+    renderTable();
+    showToast(`➕ "${name}" agregada (${quincena === '15' ? 'Q15' : quincena === '30' ? 'Q30' : 'Ambas'})`);
   }
 
   function refreshMonth() {
@@ -744,68 +697,36 @@
   function populateMonthSelect() {
     const select = document.getElementById('monthSelect');
     select.innerHTML = '';
-    monthNames.forEach((name, idx) => {
-      const option = document.createElement('option');
-      option.value = idx + 1;
-      option.textContent = name;
-      if (idx + 1 === currentMonth) option.selected = true;
-      select.appendChild(option);
+    monthNames.forEach((name, i) => {
+      const opt = document.createElement('option');
+      opt.value = i+1;
+      opt.textContent = name;
+      if (i+1 === currentMonth) opt.selected = true;
+      select.appendChild(opt);
     });
   }
 
-  function initTheme() {
-    const stored = localStorage.getItem('pq_kali_theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const theme = stored || (prefersDark ? 'dark' : 'light');
-    document.documentElement.setAttribute('data-theme', theme);
-    document.getElementById('themeToggle').textContent = theme === 'dark' ? '☀️' : '🌙';
-  }
-  function toggleTheme() {
-    const current = document.documentElement.getAttribute('data-theme');
-    const next = current === 'dark' ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', next);
-    localStorage.setItem('pq_kali_theme', next);
-    document.getElementById('themeToggle').textContent = next === 'dark' ? '☀️' : '🌙';
-  }
-
-  async function exportAsPNG() {
-    const element = document.querySelector('.container');
-    if (!element) return;
+  async function exportPNG() {
+    const el = document.querySelector('.container');
+    if (!el) return;
     showToast('📷 Generando imagen...');
     try {
-      const canvas = await html2canvas(element, { scale: 2, backgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--bg'), logging: false });
+      const canvas = await html2canvas(el, { scale: 2, backgroundColor: '#f8fafc' });
       const link = document.createElement('a');
       link.download = `PagoQ_${monthNames[currentMonth-1]}_${currentYear}.png`;
       link.href = canvas.toDataURL();
       link.click();
       showToast('✅ Imagen guardada');
-    } catch (err) {
-      showToast('❌ Error al capturar');
-    }
+    } catch(e) { showToast('❌ Error'); }
   }
 
-  let toastTimeout;
+  let toastTimer;
   function showToast(msg) {
-    const toast = document.getElementById('toast');
-    toast.textContent = msg;
-    toast.classList.add('show');
-    clearTimeout(toastTimeout);
-    toastTimeout = setTimeout(() => toast.classList.remove('show'), 2000);
-  }
-
-  function openModal() {
-    document.getElementById('modal').classList.add('open');
-    document.getElementById('newAccountName').focus();
-  }
-  function closeModal() { document.getElementById('modal').classList.remove('open'); }
-  function addAccountFromModal() {
-    const name = document.getElementById('newAccountName').value.trim();
-    if (!name) return showToast('❌ Escribe un nombre');
-    accounts.push({ id: 'acc_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6), name });
-    saveToLocal();
-    closeModal();
-    renderTable();
-    showToast(`➕ "${name}" agregada`);
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2000);
   }
 
   function bindEvents() {
@@ -814,8 +735,7 @@
     document.getElementById('addAccountBtn').addEventListener('click', openModal);
     document.getElementById('modalCancel').addEventListener('click', closeModal);
     document.getElementById('modalConfirm').addEventListener('click', addAccountFromModal);
-    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-    document.getElementById('exportBtn').addEventListener('click', exportAsPNG);
+    document.getElementById('exportBtn').addEventListener('click', exportPNG);
     document.getElementById('modal').addEventListener('click', (e) => { if (e.target === document.getElementById('modal')) closeModal(); });
     document.getElementById('newAccountName').addEventListener('keydown', (e) => { if (e.key === 'Enter') addAccountFromModal(); });
   }
@@ -825,7 +745,6 @@
     populateMonthSelect();
     document.getElementById('yearInput').value = currentYear;
     bindEvents();
-    initTheme();
     renderTable();
   }
   init();
